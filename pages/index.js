@@ -8,19 +8,34 @@ export default function Home() {
   const [area, setArea] = useState('');
   const [loading, setLoading] = useState(false);
   const [output, setOutput] = useState('');
+  const [error, setError] = useState('');
 
   const handleSubmit = async () => {
     setLoading(true);
+    setError('');
     setOutput('');
+
     const prompt = `Peça: ${type}\nÁrea: ${area}\nParte: ${part}\nParte Contrária: ${opposingPart}\nFatos: ${facts}`;
-    const res = await fetch('/api/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt })
-    });
-    const data = await res.json();
-    setOutput(data.result || 'Erro ao gerar.');
-    setLoading(false);
+
+    try {
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.message || 'Erro desconhecido no servidor');
+      } else {
+        setOutput(data.result);
+      }
+    } catch (err) {
+      setError('Erro na conexão com o servidor: ' + err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -36,6 +51,12 @@ export default function Home() {
       <button onClick={handleSubmit} disabled={loading} style={{ padding: '1rem 2rem', fontSize: '1rem', backgroundColor: '#0066ff', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
         {loading ? 'Gerando...' : 'Gerar Peça'}
       </button>
+
+      {error && (
+        <div style={{ marginTop: '2rem', color: 'red', backgroundColor: '#ffecec', padding: '1rem', borderRadius: '8px' }}>
+          <strong>Erro:</strong> {error}
+        </div>
+      )}
 
       {output && (
         <div style={{ marginTop: '2rem', whiteSpace: 'pre-wrap', backgroundColor: '#f9f9f9', padding: '1rem', borderRadius: '8px' }}>
