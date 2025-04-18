@@ -39,76 +39,138 @@ export default function Home() {
   };
 
   return (
-    <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto', fontFamily: 'Arial, sans-serif' }}>
-      <img src="/logo.png" alt="Logo Peticiona.ai" style={{ width: '200px', marginBottom: '1rem' }} />
-      <h1 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Peticiona.ai - Geração de Peças Jurídicas</h1>
+    <div style={container}>
+      <div style={card}>
+        <img src="/logo.png" alt="Peticiona.ai" style={logoStyle} />
+        <h1 style={title}>Peticiona.ai</h1>
+        <p style={subtitle}>Geração Inteligente de Peças Jurídicas</p>
 
-      <input placeholder="Nome da Parte" value={part} onChange={e => setPart(e.target.value)} style={inputStyle} />
-      <input placeholder="Parte Contrária" value={opposingPart} onChange={e => setOpposingPart(e.target.value)} style={inputStyle} />
-      <input placeholder="Tipo de Peça (Ex: Petição Inicial)" value={type} onChange={e => setType(e.target.value)} style={inputStyle} />
-      <input placeholder="Área do Direito (Ex: Cível)" value={area} onChange={e => setArea(e.target.value)} style={inputStyle} />
-      <textarea placeholder="Descreva os fatos do caso..." value={facts} onChange={e => setFacts(e.target.value)} rows={6} style={textAreaStyle} />
+        <label style={label}>Nome da Parte</label>
+        <input value={part} onChange={e => setPart(e.target.value)} style={input} />
 
-      <button onClick={handleSubmit} disabled={loading} style={buttonStyle}>
-        {loading ? 'Gerando...' : 'Gerar Peça'}
-      </button>
+        <label style={label}>Parte Contrária</label>
+        <input value={opposingPart} onChange={e => setOpposingPart(e.target.value)} style={input} />
 
-      {error && (
-        <div style={errorStyle}>
-          <strong>Erro:</strong> {error}
-        </div>
-      )}
+        <label style={label}>Tipo de Peça</label>
+        <input value={type} onChange={e => setType(e.target.value)} placeholder="Ex: Petição Inicial" style={input} />
 
-      {output && (
-        <div style={outputStyle}>
-          <h2>Resultado:</h2>
-          <pre>{output}</pre>
-        </div>
-      )}
+        <label style={label}>Área do Direito</label>
+        <input value={area} onChange={e => setArea(e.target.value)} placeholder="Ex: Cível" style={input} />
+
+        <label style={label}>Fatos do Caso</label>
+        <textarea value={facts} onChange={e => setFacts(e.target.value)} rows={5} style={textarea} />
+
+        <button onClick={handleSubmit} disabled={loading} style={button}>
+          {loading ? 'Gerando Peça...' : 'Gerar Peça'}
+        </button>
+
+        {error && <div style={errorBox}>❌ {error}</div>}
+        {output && (
+          <div style={outputBox}>
+            <h3>📝 Petição Gerada:</h3>
+            <pre style={{ whiteSpace: 'pre-wrap' }}>{output}</pre>
+          </div>
+        )}
+      </div>
+
+      <footer style={footer}>
+        © {new Date().getFullYear()} Peticiona.ai — Tecnologia Jurídica Inteligente
+      </footer>
     </div>
   );
 }
 
-const inputStyle = {
-  width: '100%',
-  padding: '0.5rem',
-  marginBottom: '0.5rem',
+const container = {
+  backgroundColor: '#f0f4f8',
+  minHeight: '100vh',
+  padding: '2rem',
+  fontFamily: 'Segoe UI, sans-serif'
+};
+
+const card = {
+  backgroundColor: '#fff',
+  maxWidth: '700px',
+  margin: '0 auto',
+  padding: '2rem',
+  borderRadius: '12px',
+  boxShadow: '0 0 12px rgba(0,0,0,0.1)'
+};
+
+const logoStyle = {
+  width: '180px',
+  display: 'block',
+  margin: '0 auto 1rem auto'
+};
+
+const title = {
+  textAlign: 'center',
+  fontSize: '2rem',
+  color: '#003366',
+  marginBottom: '0.3rem'
+};
+
+const subtitle = {
+  textAlign: 'center',
   fontSize: '1rem',
-  borderRadius: '4px',
+  color: '#666',
+  marginBottom: '2rem'
+};
+
+const label = {
+  fontWeight: 'bold',
+  display: 'block',
+  marginBottom: '0.3rem',
+  marginTop: '1rem'
+};
+
+const input = {
+  width: '100%',
+  padding: '0.6rem',
+  borderRadius: '6px',
   border: '1px solid #ccc'
 };
 
-const textAreaStyle = {
+const textarea = {
   width: '100%',
-  padding: '1rem',
-  marginBottom: '1rem',
-  fontSize: '1rem',
-  borderRadius: '4px',
-  border: '1px solid #ccc'
+  padding: '0.8rem',
+  borderRadius: '6px',
+  border: '1px solid #ccc',
+  resize: 'vertical'
 };
 
-const buttonStyle = {
-  padding: '1rem 2rem',
-  fontSize: '1rem',
-  backgroundColor: '#0066ff',
-  color: 'white',
+const button = {
+  marginTop: '1.5rem',
+  width: '100%',
+  padding: '0.8rem',
+  backgroundColor: '#0066cc',
+  color: '#fff',
   border: 'none',
-  borderRadius: '5px',
+  borderRadius: '6px',
+  fontSize: '1rem',
   cursor: 'pointer'
 };
 
-const errorStyle = {
-  marginTop: '2rem',
-  color: 'red',
+const errorBox = {
   backgroundColor: '#ffecec',
+  color: '#cc0000',
   padding: '1rem',
-  borderRadius: '8px'
+  marginTop: '1rem',
+  borderRadius: '6px'
 };
 
-const outputStyle = {
+const outputBox = {
+  backgroundColor: '#f8f8f8',
+  color: '#333',
+  padding: '1.5rem',
   marginTop: '2rem',
-  whiteSpace: 'pre-wrap',
-  backgroundColor: '#f9f9f9',
-  padding: '1rem',
-  borderRadius: '8px'
+  borderRadius: '6px',
+  maxHeight: '400px',
+  overflowY: 'auto'
+};
+
+const footer = {
+  textAlign: 'center',
+  marginTop: '3rem',
+  color: '#888',
+  fontSize: '0.9rem'
 };
