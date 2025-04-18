@@ -1,45 +1,46 @@
 import { useState } from 'react';
 
 export default function Home() {
-  const [texto, setTexto] = useState('');
-  const [resposta, setResposta] = useState('');
-  const [carregando, setCarregando] = useState(false);
+  const [facts, setFacts] = useState('');
+  const [part, setPart] = useState('');
+  const [opposingPart, setOpposingPart] = useState('');
+  const [type, setType] = useState('');
+  const [area, setArea] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [output, setOutput] = useState('');
 
-  async function gerarPeticao() {
-    setCarregando(true);
-    setResposta('');
-
-    const res = await fetch('/api/gerar', {
+  const handleSubmit = async () => {
+    setLoading(true);
+    setOutput('');
+    const prompt = `Peça: ${type}\nÁrea: ${area}\nParte: ${part}\nParte Contrária: ${opposingPart}\nFatos: ${facts}`;
+    const res = await fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt: texto })
+      body: JSON.stringify({ prompt })
     });
-
     const data = await res.json();
-    setResposta(data.resultado);
-    setCarregando(false);
-  }
+    setOutput(data.result || 'Erro ao gerar.');
+    setLoading(false);
+  };
 
   return (
-    <div className="max-w-2xl mx-auto py-10 px-4">
-      <h1 className="text-2xl font-bold mb-4">LexBuilder AI - Geração de Peça Jurídica</h1>
-      <textarea
-        className="w-full p-3 border rounded mb-4"
-        rows={6}
-        placeholder="Descreva aqui os fatos, nomes das partes e o tipo de peça jurídica..."
-        value={texto}
-        onChange={(e) => setTexto(e.target.value)}
-      />
-      <button
-        className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
-        onClick={gerarPeticao}
-        disabled={carregando || !texto.trim()}
-      >
-        {carregando ? 'Gerando...' : 'Gerar Peça'}
+    <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
+      <h1 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Peticiona.ai - Geração de Peças Jurídicas</h1>
+
+      <input placeholder="Nome da Parte" value={part} onChange={e => setPart(e.target.value)} style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem' }} />
+      <input placeholder="Parte Contrária" value={opposingPart} onChange={e => setOpposingPart(e.target.value)} style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem' }} />
+      <input placeholder="Tipo de Peça (Ex: Petição Inicial)" value={type} onChange={e => setType(e.target.value)} style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem' }} />
+      <input placeholder="Área do Direito (Ex: Cível)" value={area} onChange={e => setArea(e.target.value)} style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem' }} />
+      <textarea placeholder="Descreva os fatos do caso..." value={facts} onChange={e => setFacts(e.target.value)} rows={6} style={{ width: '100%', padding: '1rem', marginBottom: '1rem' }} />
+      
+      <button onClick={handleSubmit} disabled={loading} style={{ padding: '1rem 2rem', fontSize: '1rem', backgroundColor: '#0066ff', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+        {loading ? 'Gerando...' : 'Gerar Peça'}
       </button>
-      {resposta && (
-        <div className="mt-6 p-4 border rounded bg-gray-50 whitespace-pre-wrap">
-          {resposta}
+
+      {output && (
+        <div style={{ marginTop: '2rem', whiteSpace: 'pre-wrap', backgroundColor: '#f9f9f9', padding: '1rem', borderRadius: '8px' }}>
+          <h2>Resultado:</h2>
+          <p>{output}</p>
         </div>
       )}
     </div>
