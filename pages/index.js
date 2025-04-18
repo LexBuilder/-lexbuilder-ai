@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { saveAs } from 'file-saver';
 
 export default function Home() {
   const [facts, setFacts] = useState('');
@@ -38,50 +39,56 @@ export default function Home() {
     }
   };
 
+  const exportToWord = () => {
+    const blob = new Blob([output], {
+      type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    });
+    saveAs(blob, 'peticao-gerada.docx');
+  };
+
   return (
     <div style={container}>
       <div style={card}>
-        <img src="/logo.png" alt="Peticiona.ai" style={logoStyle} />
+        <img src="/logo.png" alt="Logo Peticiona" style={logo} />
         <h1 style={title}>Peticiona.ai</h1>
         <p style={subtitle}>Geração Inteligente de Peças Jurídicas</p>
 
         <label style={label}>Nome da Parte</label>
-        <input value={part} onChange={e => setPart(e.target.value)} style={input} />
+        <input style={input} value={part} onChange={e => setPart(e.target.value)} />
 
         <label style={label}>Parte Contrária</label>
-        <input value={opposingPart} onChange={e => setOpposingPart(e.target.value)} style={input} />
+        <input style={input} value={opposingPart} onChange={e => setOpposingPart(e.target.value)} />
 
         <label style={label}>Tipo de Peça</label>
-        <input value={type} onChange={e => setType(e.target.value)} placeholder="Ex: Petição Inicial" style={input} />
+        <input style={input} value={type} onChange={e => setType(e.target.value)} />
 
         <label style={label}>Área do Direito</label>
-        <input value={area} onChange={e => setArea(e.target.value)} placeholder="Ex: Cível" style={input} />
+        <input style={input} value={area} onChange={e => setArea(e.target.value)} />
 
         <label style={label}>Fatos do Caso</label>
-        <textarea value={facts} onChange={e => setFacts(e.target.value)} rows={5} style={textarea} />
+        <textarea style={textarea} rows={5} value={facts} onChange={e => setFacts(e.target.value)} />
 
-        <button onClick={handleSubmit} disabled={loading} style={button}>
+        <button style={button} onClick={handleSubmit} disabled={loading}>
           {loading ? 'Gerando Peça...' : 'Gerar Peça'}
         </button>
 
-        {error && <div style={errorBox}>❌ {error}</div>}
+        {error && <div style={errorBox}>{error}</div>}
+
         {output && (
           <div style={outputBox}>
-            <h3>📝 Petição Gerada:</h3>
+            <h3>📄 Petição Gerada:</h3>
             <pre style={{ whiteSpace: 'pre-wrap' }}>{output}</pre>
+            <button onClick={exportToWord} style={exportButton}>Exportar como Word</button>
           </div>
         )}
       </div>
-
-      <footer style={footer}>
-        © {new Date().getFullYear()} Peticiona.ai — Tecnologia Jurídica Inteligente
-      </footer>
+      <footer style={footer}>© {new Date().getFullYear()} Peticiona.ai — Tecnologia Jurídica Inteligente</footer>
     </div>
   );
 }
 
 const container = {
-  backgroundColor: '#f0f4f8',
+  backgroundColor: '#f8f9fa',
   minHeight: '100vh',
   padding: '2rem',
   fontFamily: 'Segoe UI, sans-serif'
@@ -89,51 +96,50 @@ const container = {
 
 const card = {
   backgroundColor: '#fff',
-  maxWidth: '700px',
+  maxWidth: '720px',
   margin: '0 auto',
   padding: '2rem',
   borderRadius: '12px',
   boxShadow: '0 0 12px rgba(0,0,0,0.1)'
 };
 
-const logoStyle = {
+const logo = {
   width: '180px',
   display: 'block',
-  margin: '0 auto 1rem auto'
+  margin: '0 auto 1rem'
 };
 
 const title = {
   textAlign: 'center',
   fontSize: '2rem',
   color: '#003366',
-  marginBottom: '0.3rem'
+  marginBottom: '0.2rem'
 };
 
 const subtitle = {
   textAlign: 'center',
-  fontSize: '1rem',
-  color: '#666',
-  marginBottom: '2rem'
+  color: '#555',
+  marginBottom: '1.5rem'
 };
 
 const label = {
   fontWeight: 'bold',
   display: 'block',
-  marginBottom: '0.3rem',
-  marginTop: '1rem'
+  marginTop: '1rem',
+  marginBottom: '0.3rem'
 };
 
 const input = {
   width: '100%',
   padding: '0.6rem',
-  borderRadius: '6px',
+  borderRadius: '5px',
   border: '1px solid #ccc'
 };
 
 const textarea = {
   width: '100%',
   padding: '0.8rem',
-  borderRadius: '6px',
+  borderRadius: '5px',
   border: '1px solid #ccc',
   resize: 'vertical'
 };
@@ -141,36 +147,44 @@ const textarea = {
 const button = {
   marginTop: '1.5rem',
   width: '100%',
-  padding: '0.8rem',
+  padding: '0.9rem',
   backgroundColor: '#0066cc',
   color: '#fff',
-  border: 'none',
-  borderRadius: '6px',
+  fontWeight: 'bold',
   fontSize: '1rem',
+  border: 'none',
+  borderRadius: '5px',
+  cursor: 'pointer'
+};
+
+const exportButton = {
+  marginTop: '1rem',
+  padding: '0.6rem 1.2rem',
+  backgroundColor: '#28a745',
+  color: '#fff',
+  border: 'none',
+  borderRadius: '5px',
   cursor: 'pointer'
 };
 
 const errorBox = {
-  backgroundColor: '#ffecec',
-  color: '#cc0000',
-  padding: '1rem',
   marginTop: '1rem',
+  color: '#c00',
+  backgroundColor: '#ffecec',
+  padding: '1rem',
   borderRadius: '6px'
 };
 
 const outputBox = {
-  backgroundColor: '#f8f8f8',
-  color: '#333',
-  padding: '1.5rem',
   marginTop: '2rem',
-  borderRadius: '6px',
-  maxHeight: '400px',
-  overflowY: 'auto'
+  backgroundColor: '#f1f1f1',
+  padding: '1.2rem',
+  borderRadius: '6px'
 };
 
 const footer = {
   textAlign: 'center',
   marginTop: '3rem',
-  color: '#888',
-  fontSize: '0.9rem'
+  fontSize: '0.9rem',
+  color: '#777'
 };
