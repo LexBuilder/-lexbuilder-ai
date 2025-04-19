@@ -49,7 +49,7 @@ export default function Home() {
   return (
     <div style={container}>
       <div style={card}>
-        <img src="/logo.png" alt="Logo Peticiona" style={logo} />
+        <img src="/logo.png" alt="Logo Peticiona.ai" style={logo} />
         <h1 style={title}>Peticiona.ai</h1>
         <p style={subtitle}>Geração Inteligente de Peças Jurídicas</p>
 
@@ -82,7 +82,9 @@ export default function Home() {
           </div>
         )}
       </div>
-      <footer style={footer}>© {new Date().getFullYear()} Peticiona.ai — Tecnologia Jurídica Inteligente</footer>
+      <footer style={footer}>
+        © {new Date().getFullYear()} Peticiona.ai — Tecnologia Jurídica Inteligente
+      </footer>
     </div>
   );
 }
