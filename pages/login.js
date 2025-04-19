@@ -14,6 +14,11 @@ export default function Login() {
   const [erro, setErro] = useState("");
 
   const registrar = async () => {
+    if (senha.length < 6) {
+      setErro("⚠️ A senha precisa ter no mínimo 6 caracteres.");
+      return;
+    }
+
     try {
       await createUserWithEmailAndPassword(auth, email, senha);
       router.push("/");
@@ -38,6 +43,10 @@ export default function Login() {
 
   return (
     <div style={container}>
+      <div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
+        <img src="/logo.png" alt="Logo Peticiona" style={{ height: "60px" }} />
+      </div>
+
       <h1 style={titulo}>Login – Peticiona.ai</h1>
 
       <input
