@@ -48,8 +48,16 @@ export default function Home() {
 
   return (
     <div style={container}>
-      <div style={card}>
-        <img src="/logo.png" alt="Logo Peticiona.ai" style={logo} />
+      {/* MENU FIXO */}
+      <header style={header}>
+        <img src="/logo.png" alt="Logo" style={{ height: '40px' }} />
+        <nav style={nav}>
+          <a href="/home" style={link}>Início</a>
+          <a href="/" style={link}>Gerar Petição</a>
+        </nav>
+      </header>
+
+      <div style={{ ...card, marginTop: '6rem' }}>
         <h1 style={title}>Peticiona.ai</h1>
         <p style={subtitle}>Geração Inteligente de Peças Jurídicas</p>
 
@@ -92,8 +100,34 @@ export default function Home() {
 const container = {
   backgroundColor: '#f8f9fa',
   minHeight: '100vh',
-  padding: '2rem',
+  padding: '0',
   fontFamily: 'Segoe UI, sans-serif'
+};
+
+const header = {
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  right: 0,
+  backgroundColor: '#fff',
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  padding: '1rem 2rem',
+  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+  zIndex: 999
+};
+
+const nav = {
+  display: 'flex',
+  gap: '1.5rem'
+};
+
+const link = {
+  textDecoration: 'none',
+  color: '#003366',
+  fontWeight: 'bold',
+  fontSize: '1rem'
 };
 
 const card = {
@@ -103,12 +137,6 @@ const card = {
   padding: '2rem',
   borderRadius: '12px',
   boxShadow: '0 0 12px rgba(0,0,0,0.1)'
-};
-
-const logo = {
-  width: '180px',
-  display: 'block',
-  margin: '0 auto 1rem'
 };
 
 const title = {
