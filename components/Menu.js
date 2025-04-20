@@ -1,37 +1,24 @@
-import { useRouter } from "next/router";
+import Link from "next/link";
 
-const Menu = () => {
-  const router = useRouter();
-  const path = router.pathname;
-
-  const linkStyle = (href) => ({
-    textDecoration: "none",
-    color: path === href ? "#0066cc" : "#333",
-    fontWeight: path === href ? "bold" : "normal",
-    marginRight: "1rem",
-  });
-
+export default function Menu() {
   return (
-    <nav style={nav}>
-      <a href="/home" style={linkStyle("/home")}>🏠 Início</a>
-      <a href="/" style={linkStyle("/")}>📄 Gerar Petição</a>
-      <a href="/login" style={linkStyle("/login")}>🔐 Login</a>
-    </nav>
+    <header style={{ textAlign: "center", marginBottom: "2rem" }}>
+      <div style={{ marginBottom: "1rem" }}>
+        <Link href="/home">
+          <img
+            src="/logo.png"
+            alt="Peticiona.ai"
+            style={{ maxWidth: "220px", height: "auto", margin: "0 auto" }}
+          />
+        </Link>
+      </div>
+      <nav>
+        <ul style={{ display: "flex", justifyContent: "center", gap: "2rem", listStyle: "none", padding: 0 }}>
+          <li><Link href="/home">🏠 Início</Link></li>
+          <li><Link href="/login">🔐 Login</Link></li>
+          <li><Link href="/">📄 Gerar Petição</Link></li>
+        </ul>
+      </nav>
+    </header>
   );
-};
-
-const nav = {
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  padding: "1rem",
-  backgroundColor: "#f5f5f5",
-  boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-  position: "fixed",
-  top: 0,
-  left: 0,
-  right: 0,
-  zIndex: 999,
-};
-
-export default Menu;
+}
