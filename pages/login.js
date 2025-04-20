@@ -6,6 +6,7 @@ import {
   signOut,
 } from "firebase/auth";
 import { useRouter } from "next/router";
+import Menu from "../components/Menu";
 
 export default function Login() {
   const router = useRouter();
@@ -42,70 +43,97 @@ export default function Login() {
   };
 
   return (
-    <div style={container}>
-      <div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
-        <img src="/logo.png" alt="Logo Peticiona" style={{ height: "60px" }} />
+    <div style={page}>
+      <Menu />
+      <div style={container}>
+        <img src="/logo.png" alt="Logo Peticiona" style={logo} />
+        <h2 style={titulo}>Bem-vindo de volta 👋</h2>
+        <p style={subtitulo}>Acesse sua conta ou crie uma nova para começar</p>
+
+        <input
+          type="email"
+          placeholder="Seu e-mail"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          style={input}
+        />
+
+        <input
+          type="password"
+          placeholder="Sua senha"
+          value={senha}
+          onChange={(e) => setSenha(e.target.value)}
+          style={input}
+        />
+
+        <button onClick={entrar} style={botao}>Entrar</button>
+        <button onClick={registrar} style={{ ...botao, backgroundColor: "#28a745" }}>Registrar</button>
+        <button onClick={sair} style={{ ...botao, backgroundColor: "#dc3545" }}>Sair</button>
+
+        {erro && <p style={erroStyle}>{erro}</p>}
       </div>
-
-      <h1 style={titulo}>Login – Peticiona.ai</h1>
-
-      <input
-        style={input}
-        type="email"
-        placeholder="Seu e-mail"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        style={input}
-        type="password"
-        placeholder="Sua senha"
-        value={senha}
-        onChange={(e) => setSenha(e.target.value)}
-      />
-
-      <button style={button} onClick={entrar}>Entrar</button>
-      <button style={{ ...button, backgroundColor: "#28a745" }} onClick={registrar}>Registrar</button>
-      <button style={{ ...button, backgroundColor: "#dc3545" }} onClick={sair}>Sair</button>
-
-      {erro && <p style={{ color: "red", marginTop: "1rem" }}>{erro}</p>}
     </div>
   );
 }
 
+const page = {
+  background: "#f4f4f4",
+  minHeight: "100vh",
+  paddingTop: "5rem",
+};
+
 const container = {
-  maxWidth: "400px",
-  margin: "5rem auto",
+  maxWidth: "420px",
+  margin: "2rem auto",
   padding: "2rem",
   background: "#fff",
-  borderRadius: "8px",
-  boxShadow: "0 0 10px rgba(0,0,0,0.1)",
-  fontFamily: "Segoe UI, sans-serif"
+  borderRadius: "10px",
+  boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+  fontFamily: "Segoe UI, sans-serif",
+  textAlign: "center",
+};
+
+const logo = {
+  height: "60px",
+  marginBottom: "1rem",
 };
 
 const titulo = {
-  textAlign: "center",
   fontSize: "1.8rem",
-  marginBottom: "2rem",
-  color: "#003366"
+  color: "#003366",
+  marginBottom: "0.2rem",
+};
+
+const subtitulo = {
+  color: "#666",
+  marginBottom: "1.5rem",
 };
 
 const input = {
   width: "100%",
   padding: "0.8rem",
   marginBottom: "1rem",
-  borderRadius: "5px",
-  border: "1px solid #ccc"
+  borderRadius: "6px",
+  border: "1px solid #ccc",
 };
 
-const button = {
+const botao = {
   width: "100%",
-  padding: "0.9rem",
-  marginBottom: "0.5rem",
-  backgroundColor: "#0066cc",
-  color: "#fff",
-  fontWeight: "bold",
+  padding: "0.8rem",
+  marginBottom: "0.8rem",
+  borderRadius: "6px",
   border: "none",
+  fontWeight: "bold",
+  color: "#fff",
+  backgroundColor: "#0066cc",
+  cursor: "pointer",
+  transition: "background-color 0.3s",
+};
+
+const erroStyle = {
+  color: "#c00",
+  marginTop: "1rem",
+  backgroundColor: "#ffecec",
+  padding: "0.8rem",
   borderRadius: "5px",
-  cursor: "pointer"
 };
