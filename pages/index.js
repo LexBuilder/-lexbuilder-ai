@@ -1,214 +1,109 @@
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import { auth } from "../firebase";
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { saveAs } from "file-saver";
+import { useState } from "react";
 import Menu from "../components/Menu";
 
 export default function Home() {
-  const router = useRouter();
-  const [user, setUser] = useState(null);
-  const [part, setPart] = useState("");
-  const [opposingPart, setOpposingPart] = useState("");
-  const [type, setType] = useState("");
-  const [area, setArea] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [output, setOutput] = useState("");
-  const [error, setError] = useState("");
+  const [fatos, setFatos] = useState("");
+  const [resultado, setResultado] = useState("");
+  const [carregando, setCarregando] = useState(false);
 
-  // Fatos preenchidos via ?modelo=
-  const [facts, setFacts] = useState("");
+  const gerarPeticao = async () => {
+    if (!fatos.trim()) return alert("Por favor, preencha os fatos.");
 
-  useEffect(() => {
-    if (router.isReady) {
-      const modelo = router.query.modelo;
-      if (modelo) setFacts(modelo);
-    }
-
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) setUser(user);
-      else router.push("/login");
-    });
-
-    return () => unsubscribe();
-  }, [router.isReady]);
-
-  const logout = async () => {
-    await signOut(auth);
-    router.push("/login");
-  };
-
-  const handleSubmit = async () => {
-    setLoading(true);
-    setError("");
-    setOutput("");
-
-    const prompt = `Peça: ${type}\nÁrea: ${area}\nParte: ${part}\nParte Contrária: ${opposingPart}\nFatos: ${facts}`;
-
+    setCarregando(true);
     try {
       const response = await fetch("/api/generate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ prompt: fatos }),
       });
 
       const data = await response.json();
-
-      if (!response.ok) {
-        setError(data.message || "Erro desconhecido no servidor");
-      } else {
-        setOutput(data.result);
-      }
+      setResultado(data.result || "Erro ao gerar.");
     } catch (err) {
-      setError("Erro de conexão com o servidor: " + err.message);
-    } finally {
-      setLoading(false);
+      setResultado("Erro de conexão com o servidor.");
     }
+    setCarregando(false);
   };
 
-  const exportToWord = () => {
-    const blob = new Blob([output], {
-      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    });
-    saveAs(blob, "peticao-gerada.docx");
-  };
-
-  const exportToPDF = async () => {
-    const element = document.getElementById("pdf-content");
-
-    if (!element) return alert("Nada para exportar!");
-
-    const html2pdf = (await import("html2pdf.js")).default;
-
-    html2pdf().from(element).save("peticao-gerada.pdf");
+  const exportarPDF = () => {
+    const elemento = document.getElementById("resultado-pdf");
+    if (!elemento) return;
+    const opt = {
+      margin: 1,
+      filename: "peticao-peticiona.pdf",
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "cm", format: "a4", orientation: "portrait" },
+    };
+    window.html2pdf().set(opt).from(elemento).save();
   };
 
   return (
-    <div style={container}>
+    <div style={{ padding: "2rem", fontFamily: "Segoe UI" }}>
       <Menu />
-      <div style={{ ...card, marginTop: "6rem" }}>
-        <h1 style={title}>Peticiona.ai</h1>
-        <p style={subtitle}>Geração Inteligente de Peças Jurídicas</p>
+      <h1 style={{ fontSize: "1.8rem", marginBottom: "1rem" }}>Peticiona.ai - Geração de Peça Jurídica</h1>
 
-        <label style={label}>Nome da Parte</label>
-        <input style={input} value={part} onChange={(e) => setPart(e.target.value)} />
+      <textarea
+        rows={6}
+        placeholder="Descreva aqui os fatos do caso..."
+        value={fatos}
+        onChange={(e) => setFatos(e.target.value)}
+        style={{ width: "100%", padding: "1rem", borderRadius: "6px", fontSize: "1rem" }}
+      />
 
-        <label style={label}>Parte Contrária</label>
-        <input style={input} value={opposingPart} onChange={(e) => setOpposingPart(e.target.value)} />
+      <button
+        onClick={gerarPeticao}
+        disabled={carregando}
+        style={{
+          marginTop: "1rem",
+          padding: "0.8rem 1.6rem",
+          background: "#6f42c1",
+          color: "#fff",
+          border: "none",
+          borderRadius: "6px",
+          cursor: "pointer",
+          fontWeight: "bold",
+        }}
+      >
+        {carregando ? "Gerando..." : "Gerar Peça"}
+      </button>
 
-        <label style={label}>Tipo de Peça</label>
-        <input style={input} value={type} onChange={(e) => setType(e.target.value)} />
-
-        <label style={label}>Área do Direito</label>
-        <input style={input} value={area} onChange={(e) => setArea(e.target.value)} />
-
-        <label style={label}>Fatos do Caso</label>
-        <textarea style={textarea} rows={5} value={facts} onChange={(e) => setFacts(e.target.value)} />
-
-        <button style={button} onClick={handleSubmit} disabled={loading}>
-          {loading ? "Gerando Petição..." : "Gerar Petição"}
-        </button>
-
-        {error && <div style={errorBox}>{error}</div>}
-
-        {output && (
-          <div id="pdf-content" style={outputBox}>
-            <h3>📄 Petição Gerada:</h3>
-            <pre style={{ whiteSpace: "pre-wrap" }}>{output}</pre>
-            <button onClick={exportToWord} style={exportButton}>Exportar como Word</button>
-            <button onClick={exportToPDF} style={exportButton}>Exportar como PDF</button>
+      {resultado && (
+        <div style={{ marginTop: "2rem" }}>
+          <h2>Resultado:</h2>
+          <div
+            id="resultado-pdf"
+            style={{
+              whiteSpace: "pre-wrap",
+              background: "#f8f9fa",
+              padding: "1.5rem",
+              borderRadius: "6px",
+              marginBottom: "1rem",
+            }}
+          >
+            {resultado}
           </div>
-        )}
-      </div>
+          <button
+            onClick={exportarPDF}
+            style={{
+              padding: "0.6rem 1.4rem",
+              background: "#343a40",
+              color: "#fff",
+              border: "none",
+              borderRadius: "6px",
+              cursor: "pointer",
+              fontWeight: "bold",
+            }}
+          >
+            Exportar como PDF
+          </button>
+        </div>
+      )}
+
+      {/* Adiciona o script da biblioteca html2pdf.js */}
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
     </div>
   );
 }
-
-const container = {
-  backgroundColor: "#f8f9fa",
-  minHeight: "100vh",
-  padding: "0",
-  fontFamily: "Segoe UI, sans-serif",
-};
-
-const card = {
-  backgroundColor: "#fff",
-  maxWidth: "720px",
-  margin: "0 auto",
-  padding: "2rem",
-  borderRadius: "12px",
-  boxShadow: "0 0 12px rgba(0,0,0,0.1)",
-};
-
-const title = {
-  textAlign: "center",
-  fontSize: "2rem",
-  color: "#003366",
-  marginBottom: "0.2rem",
-};
-
-const subtitle = {
-  textAlign: "center",
-  color: "#555",
-  marginBottom: "1.5rem",
-};
-
-const label = {
-  fontWeight: "bold",
-  display: "block",
-  marginTop: "1rem",
-  marginBottom: "0.3rem",
-};
-
-const input = {
-  width: "100%",
-  padding: "0.6rem",
-  borderRadius: "5px",
-  border: "1px solid #ccc",
-};
-
-const textarea = {
-  width: "100%",
-  padding: "0.8rem",
-  borderRadius: "5px",
-  border: "1px solid #ccc",
-  resize: "vertical",
-};
-
-const button = {
-  marginTop: "1.5rem",
-  width: "100%",
-  padding: "0.9rem",
-  backgroundColor: "#0066cc",
-  color: "#fff",
-  fontWeight: "bold",
-  fontSize: "1rem",
-  border: "none",
-  borderRadius: "5px",
-  cursor: "pointer",
-};
-
-const exportButton = {
-  marginTop: "1rem",
-  padding: "0.6rem 1.2rem",
-  backgroundColor: "#28a745",
-  color: "#fff",
-  border: "none",
-  borderRadius: "5px",
-  cursor: "pointer",
-};
-
-const errorBox = {
-  marginTop: "1rem",
-  color: "#c00",
-  backgroundColor: "#ffecec",
-  padding: "1rem",
-  borderRadius: "6px",
-};
-
-const outputBox = {
-  marginTop: "2rem",
-  backgroundColor: "#f1f1f1",
-  padding: "1.2rem",
-  borderRadius: "6px",
-};
