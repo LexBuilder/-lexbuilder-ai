@@ -1,10 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Menu from "../components/Menu";
 
 export default function Home() {
   const [fatos, setFatos] = useState("");
   const [resultado, setResultado] = useState("");
   const [carregando, setCarregando] = useState(false);
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js";
+    script.async = true;
+    document.body.appendChild(script);
+  }, []);
 
   const gerarPeticao = async () => {
     if (!fatos.trim()) return alert("Por favor, preencha os fatos.");
@@ -101,9 +108,6 @@ export default function Home() {
           </button>
         </div>
       )}
-
-      {/* Adiciona o script da biblioteca html2pdf.js */}
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
     </div>
   );
 }
