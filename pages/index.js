@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { auth } from "../firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { saveAs } from "file-saver";
+import Menu from "../components/Menu";
 
 export default function Home() {
   const router = useRouter();
   const [user, setUser] = useState(null);
-  const [facts, setFacts] = useState("");
   const [part, setPart] = useState("");
   const [opposingPart, setOpposingPart] = useState("");
   const [type, setType] = useState("");
@@ -16,13 +16,22 @@ export default function Home() {
   const [output, setOutput] = useState("");
   const [error, setError] = useState("");
 
+  // Fatos preenchidos via ?modelo=
+  const [facts, setFacts] = useState("");
+
   useEffect(() => {
+    if (router.isReady) {
+      const modelo = router.query.modelo;
+      if (modelo) setFacts(modelo);
+    }
+
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) setUser(user);
       else router.push("/login");
     });
+
     return () => unsubscribe();
-  }, []);
+  }, [router.isReady]);
 
   const logout = async () => {
     await signOut(auth);
@@ -76,20 +85,7 @@ export default function Home() {
 
   return (
     <div style={container}>
-      <header style={header}>
-        <img src="/logo.png" alt="Logo" style={{ height: "40px" }} />
-        <nav style={nav}>
-          <a href="/home" style={link}>Início</a>
-          <a href="/" style={link}>Gerar Petição</a>
-          {user && (
-            <>
-              <span style={userStyle}>👤 {user.email}</span>
-              <button onClick={logout} style={logoutButton}>Sair</button>
-            </>
-          )}
-        </nav>
-      </header>
-
+      <Menu />
       <div style={{ ...card, marginTop: "6rem" }}>
         <h1 style={title}>Peticiona.ai</h1>
         <p style={subtitle}>Geração Inteligente de Peças Jurídicas</p>
@@ -133,47 +129,6 @@ const container = {
   minHeight: "100vh",
   padding: "0",
   fontFamily: "Segoe UI, sans-serif",
-};
-
-const header = {
-  position: "fixed",
-  top: 0,
-  left: 0,
-  right: 0,
-  backgroundColor: "#fff",
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  padding: "1rem 2rem",
-  boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-  zIndex: 999,
-};
-
-const nav = {
-  display: "flex",
-  gap: "1.2rem",
-  alignItems: "center",
-};
-
-const link = {
-  textDecoration: "none",
-  color: "#003366",
-  fontWeight: "bold",
-  fontSize: "1rem",
-};
-
-const userStyle = {
-  fontSize: "0.9rem",
-  color: "#444",
-};
-
-const logoutButton = {
-  background: "#dc3545",
-  color: "#fff",
-  border: "none",
-  padding: "0.5rem 1rem",
-  borderRadius: "4px",
-  cursor: "pointer",
 };
 
 const card = {
