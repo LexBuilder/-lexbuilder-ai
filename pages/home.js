@@ -1,168 +1,141 @@
-import Menu from "../components/Menu";
-import { useRouter } from "next/router";
+import Link from "next/link";
 
-export default function HomePage() {
-  const router = useRouter();
-
-  const handleTestClick = () => {
-    router.push("/login");
-  };
-
-  const handlePlansClick = () => {
-    router.push("/planos");
-  };
-
+export default function Home() {
   return (
-    <div style={{ fontFamily: "Segoe UI, sans-serif", background: "#f8f9fa", minHeight: "100vh" }}>
-      <Menu />
+    <div style={{ fontFamily: "Segoe UI", padding: "2rem" }}>
+      {/* Logo centralizada */}
+      <div style={{ textAlign: "center", marginBottom: "2rem" }}>
+        <img src="/logo.png" alt="Peticiona.ai" style={{ maxWidth: "240px" }} />
+      </div>
 
-      <section style={{ padding: "4rem 2rem", textAlign: "center", backgroundColor: "#fff" }}>
-        <h1 style={{ fontSize: "2.5rem", color: "#003366" }}>Petição pronta em minutos</h1>
-        <p style={{ fontSize: "1.2rem", color: "#333", maxWidth: "800px", margin: "1rem auto" }}>
-          Crie peças processuais de alta qualidade em segundos, informando apenas os dados básicos.
-          Fuja dos modelos prontos e otimize sua rotina.
+      {/* Apresentação */}
+      <section style={{ textAlign: "center", marginBottom: "2rem" }}>
+        <h1 style={{ fontSize: "2rem" }}>Peticiona.ai – Petições prontas em minutos</h1>
+        <p style={{ fontSize: "1.2rem", maxWidth: "800px", margin: "1rem auto" }}>
+          Otimize sua advocacia com uma inteligência artificial treinada para criar peças processuais de alta qualidade.
+          Basta informar os dados essenciais e deixe o resto com a Peticiona.ai.
         </p>
-        <button onClick={handleTestClick} style={botaoRoxo}>Testar gratuitamente</button>
+        <Link href="/login">
+          <button style={{
+            background: "#6f42c1",
+            color: "#fff",
+            border: "none",
+            padding: "0.8rem 2rem",
+            fontSize: "1rem",
+            borderRadius: "6px",
+            cursor: "pointer"
+          }}>
+            Comece agora gratuitamente
+          </button>
+        </Link>
       </section>
 
-      <section style={sessaoCinza}>
-        <h2 style={tituloSecao}>Funcionalidades exclusivas do Peticiona.ai</h2>
-        <ul style={lista}>
-          <li>📄 Geração de peças processuais com IA</li>
-          <li>📊 Jurimetria com dados reais (análise preditiva)</li>
-          <li>📌 Resumo automático de processos</li>
-          <li>📚 Petições com argumentação clara e atualizada</li>
-        </ul>
-      </section>
-
-      <section style={sessaoPlanos}>
-        <h2 style={tituloSecao}>Escolha o plano ideal para sua advocacia</h2>
-
-        <div style={gradePlanos}>
-          <div style={plano}>
-            <h3>Pós-pago</h3>
-            <p>💰 Sem mensalidade</p>
-            <ul>
-              <li>Criação de peça: R$ 16,00</li>
-              <li>Análise preditiva: R$ 6,00</li>
-              <li>Resumo de processo: R$ 6,00</li>
-            </ul>
-            <button onClick={handleTestClick} style={botaoCinza}>Comece agora</button>
-          </div>
-
-          <div style={plano}>
-            <h3>Peticiona BASIC</h3>
-            <p>📦 R$ 49,90/mês</p>
-            <ul>
-              <li>5 Criações de peças (extra: R$ 13,50)</li>
-              <li>1 Análise preditiva (extra: R$ 4,50)</li>
-              <li>1 Resumo de processo (extra: R$ 4,50)</li>
-            </ul>
-            <button onClick={handlePlansClick} style={botaoRoxo}>Ver planos</button>
-          </div>
-
-          <div style={planoDestaque}>
-            <h3>INTERMEDIÁRIO</h3>
-            <p>🔥 R$ 89,90/mês</p>
-            <ul>
-              <li>10 Criações de peças (extra: R$ 9,00)</li>
-              <li>3 Análises preditivas (extra: R$ 3,00)</li>
-              <li>3 Resumos de processo (extra: R$ 3,00)</li>
-            </ul>
-            <button onClick={handlePlansClick} style={botaoRoxo}>Plano mais escolhido</button>
-          </div>
-
-          <div style={plano}>
-            <h3>PARA PESSOA FÍSICA</h3>
-            <p>🏆 R$ 149,90/mês</p>
-            <ul>
-              <li>20 Criações de peças (extra: R$ 6,00)</li>
-              <li>5 Análises preditivas (extra: R$ 2,50)</li>
-              <li>5 Resumos de processo (extra: R$ 2,50)</li>
-            </ul>
-            <button onClick={handlePlansClick} style={botaoCinza}>Comece agora</button>
-          </div>
+      {/* Planos */}
+      <section style={{ marginBottom: "3rem" }}>
+        <h2 style={{ textAlign: "center", marginBottom: "1rem" }}>Escolha o plano ideal para você</h2>
+        <div style={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center",
+          gap: "1.5rem"
+        }}>
+          {[
+            {
+              nome: "Virtus",
+              preco: "R$ 49,90/mês",
+              descricao: [
+                "5 Criações de peças",
+                "1 Análise preditiva",
+                "1 Resumo de processo",
+                "Peça extra: R$ 13,50",
+                "Análise extra: R$ 4,50",
+                "Resumo extra: R$ 4,50"
+              ]
+            },
+            {
+              nome: "Dominus",
+              preco: "R$ 89,90/mês",
+              destaque: true,
+              descricao: [
+                "10 Criações de peças",
+                "3 Análises preditivas",
+                "3 Resumos de processo",
+                "Peça extra: R$ 9,00",
+                "Análise extra: R$ 3,00",
+                "Resumo extra: R$ 3,00"
+              ]
+            },
+            {
+              nome: "Invictus",
+              preco: "R$ 149,90/mês",
+              descricao: [
+                "20 Criações de peças",
+                "5 Análises preditivas",
+                "5 Resumos de processo",
+                "Peça extra: R$ 6,00",
+                "Análise extra: R$ 2,50",
+                "Resumo extra: R$ 2,50"
+              ]
+            }
+          ].map((plano, i) => (
+            <div key={i} style={{
+              border: plano.destaque ? "2px solid #6f42c1" : "1px solid #ccc",
+              borderRadius: "10px",
+              padding: "1.5rem",
+              width: "280px",
+              backgroundColor: plano.destaque ? "#f8f1ff" : "#fff"
+            }}>
+              <h3 style={{ textAlign: "center", marginBottom: "0.5rem" }}>{plano.nome}</h3>
+              <p style={{ textAlign: "center", fontWeight: "bold" }}>{plano.preco}</p>
+              <ul style={{ paddingLeft: "1.2rem", marginTop: "1rem" }}>
+                {plano.descricao.map((item, j) => (
+                  <li key={j}>{item}</li>
+                ))}
+              </ul>
+              <div style={{ textAlign: "center", marginTop: "1rem" }}>
+                <Link href="/login">
+                  <button style={{
+                    background: "#6f42c1",
+                    color: "#fff",
+                    border: "none",
+                    padding: "0.6rem 1.5rem",
+                    fontSize: "1rem",
+                    borderRadius: "6px",
+                    cursor: "pointer"
+                  }}>
+                    Comece agora
+                  </button>
+                </Link>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
-      <section style={sessaoCinza}>
-        <h2 style={tituloSecao}>Perguntas Frequentes</h2>
-        <div style={faq}>
-          <p><strong>Como faço para me cadastrar?</strong> Basta clicar em “Testar gratuitamente” e preencher os dados.</p>
-          <p><strong>Como funciona o pagamento?</strong> Após testar, você escolhe um plano e paga por cartão ou Pix.</p>
-          <p><strong>Esqueci minha senha, o que fazer?</strong> Na tela de login, clique em “Esqueceu a senha?”.</p>
-          <p><strong>O Peticiona.ai usa ChatGPT?</strong> Utiliza tecnologia própria com integração segura ao GPT-4.</p>
+      {/* Comparativo */}
+      <section style={{ marginBottom: "3rem" }}>
+        <h2 style={{ textAlign: "center" }}>Compare funcionalidades</h2>
+        <ul style={{ maxWidth: "800px", margin: "1rem auto", fontSize: "1rem" }}>
+          <li>✔️ Jurisprudências, leis e artigos aplicados</li>
+          <li>✔️ Petições conforme a legislação vigente</li>
+          <li>✔️ Argumentação clara e consistente</li>
+          <li>✔️ Previsão de decisões com base em dados</li>
+          <li>✔️ Resumo jurídico automático</li>
+          <li>✔️ Treinada com mais de 500 milhões de processos</li>
+          <li>✔️ Não requer prompt – IA te guia com perguntas</li>
+        </ul>
+      </section>
+
+      {/* FAQ */}
+      <section>
+        <h2 style={{ textAlign: "center" }}>Perguntas Frequentes</h2>
+        <div style={{ maxWidth: "800px", margin: "0 auto" }}>
+          <p><strong>🔹 Como faço para me cadastrar?</strong><br />Clique em qualquer botão “Comece agora”, preencha seu nome, e-mail e senha.</p>
+          <p><strong>🔹 Como funciona o pagamento?</strong><br />Você pode testar gratuitamente. Depois, escolha um plano e pague por cartão de crédito de forma segura.</p>
+          <p><strong>🔹 Esqueci minha senha. O que faço?</strong><br />Clique em “Esqueceu sua senha?” na tela de login e siga os passos para redefinir.</p>
+          <p><strong>🔹 Peticiona.ai usa ChatGPT?</strong><br />A Peticiona.ai é uma solução própria, treinada para o Direito Brasileiro com bases específicas e atualizadas.</p>
         </div>
       </section>
     </div>
   );
 }
-
-const botaoRoxo = {
-  background: "#6f42c1",
-  color: "#fff",
-  padding: "0.8rem 1.6rem",
-  border: "none",
-  borderRadius: "8px",
-  fontSize: "1rem",
-  cursor: "pointer",
-  marginTop: "1rem",
-};
-
-const botaoCinza = {
-  ...botaoRoxo,
-  background: "#343a40",
-};
-
-const sessaoCinza = {
-  backgroundColor: "#f1f1f1",
-  padding: "3rem 2rem",
-  textAlign: "center",
-};
-
-const sessaoPlanos = {
-  backgroundColor: "#fff",
-  padding: "3rem 2rem",
-  textAlign: "center",
-};
-
-const tituloSecao = {
-  fontSize: "1.8rem",
-  color: "#003366",
-  marginBottom: "1rem",
-};
-
-const lista = {
-  listStyle: "none",
-  padding: 0,
-  fontSize: "1.1rem",
-  lineHeight: "2",
-};
-
-const gradePlanos = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-  gap: "2rem",
-  marginTop: "2rem",
-};
-
-const plano = {
-  background: "#f9f9f9",
-  padding: "1.5rem",
-  borderRadius: "10px",
-  boxShadow: "0 0 10px rgba(0,0,0,0.1)",
-};
-
-const planoDestaque = {
-  ...plano,
-  border: "2px solid #6f42c1",
-  background: "#fffdf7",
-};
-
-const faq = {
-  textAlign: "left",
-  maxWidth: "800px",
-  margin: "0 auto",
-  fontSize: "1rem",
-  lineHeight: "1.8",
-};
