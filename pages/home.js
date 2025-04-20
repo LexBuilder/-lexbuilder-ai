@@ -41,7 +41,7 @@ export default function Home() {
         }}>
           {[
             {
-              nome: "Virtus",
+              nome: "Peticiona BASIC",
               preco: "R$ 49,90/mês",
               descricao: [
                 "5 Criações de peças",
@@ -53,7 +53,7 @@ export default function Home() {
               ]
             },
             {
-              nome: "Dominus",
+              nome: "INTERMEDIÁRIO",
               preco: "R$ 89,90/mês",
               destaque: true,
               descricao: [
@@ -66,7 +66,7 @@ export default function Home() {
               ]
             },
             {
-              nome: "Invictus",
+              nome: "PARA PESSOA FÍSICA",
               preco: "R$ 149,90/mês",
               descricao: [
                 "20 Criações de peças",
@@ -127,7 +127,7 @@ export default function Home() {
       </section>
 
       {/* FAQ */}
-      <section>
+      <section style={{ marginBottom: "3rem" }}>
         <h2 style={{ textAlign: "center" }}>Perguntas Frequentes</h2>
         <div style={{ maxWidth: "800px", margin: "0 auto" }}>
           <p><strong>🔹 Como faço para me cadastrar?</strong><br />Clique em qualquer botão “Comece agora”, preencha seu nome, e-mail e senha.</p>
@@ -136,6 +136,16 @@ export default function Home() {
           <p><strong>🔹 Peticiona.ai usa ChatGPT?</strong><br />A Peticiona.ai é uma solução própria, treinada para o Direito Brasileiro com bases específicas e atualizadas.</p>
         </div>
       </section>
+
+      {/* Termos de uso */}
+      <footer style={{ textAlign: "center", marginTop: "4rem" }}>
+        <p style={{ fontSize: "0.9rem" }}>
+          Ao continuar, você concorda com nossos{" "}
+          <Link href="/termos">
+            <a style={{ color: "#6f42c1", textDecoration: "underline" }}>Termos de Uso e Política de Privacidade</a>
+          </Link>.
+        </p>
+      </footer>
     </div>
   );
 }
