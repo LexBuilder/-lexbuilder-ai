@@ -1,139 +1,73 @@
 import { useState } from "react";
-import { auth } from "../firebase";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-} from "firebase/auth";
-import { useRouter } from "next/router";
-import Menu from "../components/Menu";
 
 export default function Login() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const [erro, setErro] = useState("");
-
-  const registrar = async () => {
-    if (senha.length < 6) {
-      setErro("⚠️ A senha precisa ter no mínimo 6 caracteres.");
-      return;
-    }
-
-    try {
-      await createUserWithEmailAndPassword(auth, email, senha);
-      router.push("/");
-    } catch (err) {
-      setErro("Erro ao registrar: " + err.message);
-    }
-  };
-
-  const entrar = async () => {
-    try {
-      await signInWithEmailAndPassword(auth, email, senha);
-      router.push("/");
-    } catch (err) {
-      setErro("Erro ao entrar: " + err.message);
-    }
-  };
-
-  const sair = async () => {
-    await signOut(auth);
-    router.push("/login");
-  };
 
   return (
-    <div style={page}>
-      <Menu />
-      <div style={container}>
-        <img src="/logo.png" alt="Logo Peticiona" style={logo} />
-        <h2 style={titulo}>Bem-vindo de volta 👋</h2>
-        <p style={subtitulo}>Acesse sua conta ou crie uma nova para começar</p>
+    <div style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100vh',
+      background: 'linear-gradient(135deg, #ede7f6, #f3e5f5)',
+      fontFamily: 'Segoe UI, sans-serif',
+      padding: '20px'
+    }}>
+      <div style={{
+        background: 'white',
+        padding: '40px',
+        borderRadius: '12px',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+        width: '100%',
+        maxWidth: '400px',
+        textAlign: 'center'
+      }}>
+        <h1 style={{ marginBottom: '12px', color: '#4B0082' }}>Bem-vindo ao Peticiona</h1>
+        <p style={{ marginBottom: '32px', color: '#666' }}>Acesse sua conta para gerar petições inteligentes</p>
 
         <input
           type="email"
-          placeholder="Seu e-mail"
+          placeholder="E-mail"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          style={input}
+          style={{
+            width: '100%',
+            padding: '12px',
+            marginBottom: '20px',
+            borderRadius: '8px',
+            border: '1px solid #ccc'
+          }}
         />
-
         <input
           type="password"
-          placeholder="Sua senha"
+          placeholder="Senha"
           value={senha}
           onChange={(e) => setSenha(e.target.value)}
-          style={input}
+          style={{
+            width: '100%',
+            padding: '12px',
+            marginBottom: '24px',
+            borderRadius: '8px',
+            border: '1px solid #ccc'
+          }}
         />
 
-        <button onClick={entrar} style={botao}>Entrar</button>
-        <button onClick={registrar} style={{ ...botao, backgroundColor: "#28a745" }}>Registrar</button>
-        <button onClick={sair} style={{ ...botao, backgroundColor: "#dc3545" }}>Sair</button>
-
-        {erro && <p style={erroStyle}>{erro}</p>}
+        <button style={{
+          width: '100%',
+          padding: '12px',
+          backgroundColor: '#6a0dad',
+          color: 'white',
+          border: 'none',
+          borderRadius: '8px',
+          fontSize: '16px',
+          cursor: 'pointer',
+          transition: '0.3s'
+        }} onMouseOver={(e) => e.target.style.backgroundColor = '#4b0082'}
+           onMouseOut={(e) => e.target.style.backgroundColor = '#6a0dad'}>
+          Entrar
+        </button>
       </div>
     </div>
   );
 }
-
-const page = {
-  background: "#f4f4f4",
-  minHeight: "100vh",
-  paddingTop: "5rem",
-};
-
-const container = {
-  maxWidth: "420px",
-  margin: "2rem auto",
-  padding: "2rem",
-  background: "#fff",
-  borderRadius: "10px",
-  boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-  fontFamily: "Segoe UI, sans-serif",
-  textAlign: "center",
-};
-
-const logo = {
-  height: "60px",
-  marginBottom: "1rem",
-};
-
-const titulo = {
-  fontSize: "1.8rem",
-  color: "#003366",
-  marginBottom: "0.2rem",
-};
-
-const subtitulo = {
-  color: "#666",
-  marginBottom: "1.5rem",
-};
-
-const input = {
-  width: "100%",
-  padding: "0.8rem",
-  marginBottom: "1rem",
-  borderRadius: "6px",
-  border: "1px solid #ccc",
-};
-
-const botao = {
-  width: "100%",
-  padding: "0.8rem",
-  marginBottom: "0.8rem",
-  borderRadius: "6px",
-  border: "none",
-  fontWeight: "bold",
-  color: "#fff",
-  backgroundColor: "#0066cc",
-  cursor: "pointer",
-  transition: "background-color 0.3s",
-};
-
-const erroStyle = {
-  color: "#c00",
-  marginTop: "1rem",
-  backgroundColor: "#ffecec",
-  padding: "0.8rem",
-  borderRadius: "5px",
-};
