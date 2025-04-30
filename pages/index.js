@@ -22,20 +22,18 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-10 px-4 flex justify-center items-start">
-      <div className="w-[90%] max-w-screen-xl bg-white rounded-3xl shadow-2xl p-12 space-y-10 mx-auto">
-        <h1 className="text-5xl font-bold text-center text-blue-800">
-          Peticiona.ai
-        </h1>
-        <p className="text-center text-xl text-gray-600 max-w-3xl mx-auto">
-          Gere petições jurídicas automaticamente com inteligência artificial. Escolha o tipo de peça, descreva os fatos e receba sua petição formatada.
+    <div className="min-h-screen bg-gradient-to-b from-blue-200 to-white flex items-center justify-center py-10 px-4">
+      <div className="w-full max-w-6xl bg-white rounded-3xl shadow-2xl p-10 space-y-10">
+        <h1 className="text-5xl font-bold text-center text-blue-800">Peticiona.ai</h1>
+        <p className="text-center text-lg text-gray-600">
+          Gere petições completas com inteligência artificial. Basta selecionar o tipo e descrever o caso.
         </p>
 
         <div className="space-y-8">
           <div>
-            <label className="block text-xl font-semibold text-gray-700 mb-2">Tipo de Petição</label>
+            <label className="block text-lg font-semibold text-gray-700 mb-2">Tipo de Petição</label>
             <select
-              className="w-full p-4 border border-gray-300 rounded-xl text-lg shadow-sm"
+              className="w-full p-4 border border-gray-300 rounded-xl text-lg shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400"
               value={tipoPeticao}
               onChange={(e) => setTipoPeticao(e.target.value)}
             >
@@ -52,9 +50,9 @@ export default function Home() {
           </div>
 
           <div>
-            <label className="block text-xl font-semibold text-gray-700 mb-2">Fatos do Caso</label>
+            <label className="block text-lg font-semibold text-gray-700 mb-2">Fatos do Caso</label>
             <textarea
-              className="w-full h-[800px] p-6 border border-gray-300 rounded-xl resize-none shadow-sm text-gray-800 text-lg leading-relaxed"
+              className="w-full h-[1000px] p-6 border border-gray-300 rounded-xl resize-none shadow-sm text-gray-800 text-lg leading-relaxed focus:outline-none focus:ring-2 focus:ring-blue-400"
               placeholder="Descreva aqui os fatos principais do caso com clareza..."
               value={fatos}
               onChange={(e) => setFatos(e.target.value)}
@@ -64,14 +62,14 @@ export default function Home() {
           <div className="text-center">
             <button
               onClick={gerarPeticao}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 text-xl font-semibold rounded-xl shadow-lg transition-all"
+              className="bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 transition-all duration-300 text-white px-12 py-4 text-xl font-bold rounded-full shadow-lg hover:scale-105"
             >
               {carregando ? "Gerando Petição..." : "Gerar Petição"}
             </button>
           </div>
 
           {resposta && (
-            <div className="bg-gray-50 border border-gray-300 rounded-xl p-8 shadow-inner">
+            <div className="bg-gray-50 border border-gray-200 rounded-xl p-8 shadow-inner mt-8">
               <h2 className="text-2xl font-bold text-blue-700 mb-4">Petição Gerada:</h2>
               <pre className="whitespace-pre-wrap text-gray-900 text-lg leading-relaxed">
                 {resposta}
