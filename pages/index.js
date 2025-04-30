@@ -1,113 +1,68 @@
-import { useEffect, useState } from "react";
-import Menu from "../components/Menu";
+'use client';
+import { useState } from 'react';
 
 export default function Home() {
+  const [tipoPeticao, setTipoPeticao] = useState("Petição Inicial");
   const [fatos, setFatos] = useState("");
-  const [resultado, setResultado] = useState("");
+  const [resposta, setResposta] = useState("");
   const [carregando, setCarregando] = useState(false);
 
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js";
-    script.async = true;
-    document.body.appendChild(script);
-  }, []);
-
-  const gerarPeticao = async () => {
-    if (!fatos.trim()) return alert("Por favor, preencha os fatos.");
-
+  async function gerarPeticao() {
     setCarregando(true);
-    try {
-      const response = await fetch("/api/generate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ prompt: fatos }),
-      });
+    const prompt = `Elabore uma ${tipoPeticao.toLowerCase()} com base nos seguintes fatos: ${fatos}`;
 
-      const data = await response.json();
-      setResultado(data.result || "Erro ao gerar.");
-    } catch (err) {
-      setResultado("Erro de conexão com o servidor.");
-    }
+    const respostaIA = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: prompt }),
+    });
+
+    const dados = await respostaIA.json();
+    setResposta(dados.result);
     setCarregando(false);
-  };
-
-  const exportarPDF = () => {
-    const elemento = document.getElementById("resultado-pdf");
-    if (!elemento) return;
-    const opt = {
-      margin: 1,
-      filename: "peticao-peticiona.pdf",
-      image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: "cm", format: "a4", orientation: "portrait" },
-    };
-    window.html2pdf().set(opt).from(elemento).save();
-  };
+  }
 
   return (
-    <div style={{ padding: "2rem", fontFamily: "Segoe UI" }}>
-      <Menu />
-      <h1 style={{ fontSize: "1.8rem", marginBottom: "1rem" }}>Peticiona.ai - Geração de Peça Jurídica</h1>
+    <main className="flex flex-col items-center justify-start min-h-screen p-4">
+      <h1 className="text-3xl font-bold mb-6">Peticiona.ai</h1>
+
+      <label className="mb-1 font-semibold">Tipo de Petição:</label>
+      <select
+        className="mb-4 p-2 border rounded w-72 text-gray-800"
+        value={tipoPeticao}
+        onChange={(e) => setTipoPeticao(e.target.value)}
+      >
+        <option>Petição Inicial</option>
+        <option>Contestação</option>
+        <option>Embargos de Declaração</option>
+        <option>Apelação</option>
+        <option>Agravo de Instrumento</option>
+        <option>Agravo Interno</option>
+        <option>Recurso Especial</option>
+        <option>Agravo em Recurso Especial</option>
+        <option>Recurso Extraordinário</option>
+      </select>
 
       <textarea
-        rows={6}
         placeholder="Descreva aqui os fatos do caso..."
+        className="w-full max-w-xl h-52 p-4 border rounded mb-4 text-gray-800"
         value={fatos}
         onChange={(e) => setFatos(e.target.value)}
-        style={{ width: "100%", padding: "1rem", borderRadius: "6px", fontSize: "1rem" }}
       />
 
       <button
         onClick={gerarPeticao}
-        disabled={carregando}
-        style={{
-          marginTop: "1rem",
-          padding: "0.8rem 1.6rem",
-          background: "#6f42c1",
-          color: "#fff",
-          border: "none",
-          borderRadius: "6px",
-          cursor: "pointer",
-          fontWeight: "bold",
-        }}
+        className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded mb-4"
       >
-        {carregando ? "Gerando..." : "Gerar Peça"}
+        {carregando ? "Gerando..." : "Gerar Petição"}
       </button>
 
-      {resultado && (
-        <div style={{ marginTop: "2rem" }}>
-          <h2>Resultado:</h2>
-          <div
-            id="resultado-pdf"
-            style={{
-              whiteSpace: "pre-wrap",
-              background: "#f8f9fa",
-              padding: "1.5rem",
-              borderRadius: "6px",
-              marginBottom: "1rem",
-            }}
-          >
-            {resultado}
-          </div>
-          <button
-            onClick={exportarPDF}
-            style={{
-              padding: "0.6rem 1.4rem",
-              background: "#343a40",
-              color: "#fff",
-              border: "none",
-              borderRadius: "6px",
-              cursor: "pointer",
-              fontWeight: "bold",
-            }}
-          >
-            Exportar como PDF
-          </button>
+      {resposta && (
+        <div className="w-full max-w-3xl bg-white p-4 border rounded shadow">
+          <h2 className="text-xl font-semibold mb-2">Resultado:</h2>
+          <pre className="whitespace-pre-wrap text-gray-900">{resposta}</pre>
         </div>
       )}
-    </div>
+    </main>
   );
 }
