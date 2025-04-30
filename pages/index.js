@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { ArrowRight } from 'lucide-react';
 
 export default function Home() {
   const [tipoPeticao, setTipoPeticao] = useState("Petição Inicial");
@@ -22,18 +23,20 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-200 to-white flex items-center justify-center py-10 px-4">
-      <div className="w-full max-w-6xl bg-white rounded-3xl shadow-2xl p-10 space-y-10">
-        <h1 className="text-5xl font-bold text-center text-blue-800">Peticiona.ai</h1>
-        <p className="text-center text-lg text-gray-600">
-          Gere petições completas com inteligência artificial. Basta selecionar o tipo e descrever o caso.
-        </p>
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-white py-10 px-6">
+      <div className="max-w-7xl mx-auto bg-white rounded-3xl shadow-2xl p-10">
+        <h1 className="text-5xl font-bold text-blue-800 text-center mb-10">
+          Peticiona.ai
+        </h1>
 
-        <div className="space-y-8">
-          <div>
-            <label className="block text-lg font-semibold text-gray-700 mb-2">Tipo de Petição</label>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Editor da petição */}
+          <div className="space-y-6">
+            <label className="block text-lg font-semibold text-gray-700">
+              Tipo de Petição
+            </label>
             <select
-              className="w-full p-4 border border-gray-300 rounded-xl text-lg shadow-sm bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full p-4 rounded-xl border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-400"
               value={tipoPeticao}
               onChange={(e) => setTipoPeticao(e.target.value)}
             >
@@ -47,35 +50,36 @@ export default function Home() {
               <option>Agravo em Recurso Especial</option>
               <option>Recurso Extraordinário</option>
             </select>
-          </div>
 
-          <div>
-            <label className="block text-lg font-semibold text-gray-700 mb-2">Fatos do Caso</label>
+            <label className="block text-lg font-semibold text-gray-700">
+              Fatos do Caso
+            </label>
             <textarea
-              className="w-full h-[1000px] p-6 border border-gray-300 rounded-xl resize-none shadow-sm text-gray-800 text-lg leading-relaxed focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Descreva aqui os fatos principais do caso com clareza..."
+              className="w-full h-[700px] p-6 rounded-xl border border-gray-300 resize-none shadow-sm text-gray-800 text-base leading-relaxed"
+              placeholder="Descreva com clareza os fatos jurídicos do caso..."
               value={fatos}
               onChange={(e) => setFatos(e.target.value)}
             />
-          </div>
 
-          <div className="text-center">
             <button
               onClick={gerarPeticao}
-              className="bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 transition-all duration-300 text-white px-12 py-4 text-xl font-bold rounded-full shadow-lg hover:scale-105"
+              className="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white text-lg font-bold py-4 px-8 rounded-xl shadow-md transition-transform hover:scale-105"
             >
-              {carregando ? "Gerando Petição..." : "Gerar Petição"}
+              <ArrowRight className="w-5 h-5" /> {carregando ? "Gerando..." : "Gerar Petição"}
             </button>
           </div>
 
-          {resposta && (
-            <div className="bg-gray-50 border border-gray-200 rounded-xl p-8 shadow-inner mt-8">
-              <h2 className="text-2xl font-bold text-blue-700 mb-4">Petição Gerada:</h2>
-              <pre className="whitespace-pre-wrap text-gray-900 text-lg leading-relaxed">
+          {/* Resultado da petição */}
+          <div className="bg-gray-50 border border-gray-300 rounded-xl p-6 h-[850px] overflow-auto shadow-inner">
+            <h2 className="text-2xl font-semibold text-blue-700 mb-4">Pré-visualização:</h2>
+            {resposta ? (
+              <pre className="whitespace-pre-wrap text-gray-900 text-base leading-relaxed">
                 {resposta}
               </pre>
-            </div>
-          )}
+            ) : (
+              <p className="text-gray-500">A petição gerada aparecerá aqui.</p>
+            )}
+          </div>
         </div>
       </div>
     </div>
